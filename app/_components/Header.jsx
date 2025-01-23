@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { LayoutGridIcon, Search, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import getCategory from '../_utils/GlobalApi'
+import { getCategory } from '../_utils/GlobalApi'
 
 const Header = () => {
   const [categoryList, setCategoryList] = useState([])
