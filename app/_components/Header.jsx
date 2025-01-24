@@ -11,7 +11,6 @@ const Header = () => {
   useEffect(()=>{
     getCategoryList()
   },[])
-  console.log(categoryList)
   const getCategoryList=()=>{
     getCategory().then(res=>setCategoryList(res?.data?.data))
   }
