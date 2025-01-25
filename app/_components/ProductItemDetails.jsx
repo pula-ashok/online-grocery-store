@@ -1,9 +1,12 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import { ShoppingBasket } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 
 const ProductItemDetails = ({product}) => {
+  const [productToalPrice, setProductToalPrice] = useState(product?.sellingPrice?product?.sellingPrice:product?.mrp)
+  const [quantity, setQuantity] = useState(1)
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 p-7 bg-white text-black'>
         <Image src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL+product?.images[0]?.url} alt='product' width={300} height={300} className='bg-slate-200 p-5 h-[320px] w-[300px] object-contain rounded-lg'/>
@@ -16,11 +19,14 @@ const ProductItemDetails = ({product}) => {
              </div>
              <h2 className='font-medium text-lg'>Quantity : {product?.itemQuantiyType}</h2>
              <div className='flex flex-col items-baseline gap-3'>
+              <div className='flex gap-3 items-center'>
                 <div className='flex p-2 border gap-10 items-center px-5'>
-                    <button>-</button>
-                    <h2>1</h2>
-                    <button>+</button>
+                    <button disabled={quantity===1} onClick={()=>setQuantity(quantity-1)}>-</button>
+                    <h2>{quantity}</h2>
+                    <button onClick={()=>setQuantity(quantity+1)}>+</button>
                 </div>
+                <h2 className='text-2xl font-bold'>${(quantity * productToalPrice).toFixed(2)}</h2>
+              </div>
                 <Button><ShoppingBasket/> Add To Cart</Button>
              </div>
              <h2><span className='font-bold'>Category: </span>{product?.categories[0]?.name}</h2>
