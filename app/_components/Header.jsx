@@ -5,6 +5,7 @@ import { LayoutGridIcon, Search, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { getCategory } from '../_utils/GlobalApi'
+import Link from 'next/link'
 
 const Header = () => {
   const [categoryList, setCategoryList] = useState([])
@@ -17,7 +18,7 @@ const Header = () => {
   return (
     <div className='flex justify-between p-5 shadow-md'>
       <div className='flex items-center gap-8'>
-        <Image src={'/logo.png'} alt='logo' width={150} height={100}/>
+        <Link href={"/"} ><Image src={'/logo.png'} alt='logo' width={150} height={100}/></Link>        
         <DropdownMenu>
           <DropdownMenuTrigger>
           <h2 className='md:flex items-center gap-2 border rounded-full p-2 px-10 bg-slate-200 cursor-pointer hidden'>
@@ -29,10 +30,12 @@ const Header = () => {
             <DropdownMenuSeparator />
             {
               categoryList.map((category,index)=>
+                <Link href={`/products-category/${category?.name}`} key={index}>
                 <DropdownMenuItem key={index} className='flex gap-4 items-center cursor-pointer'>
                 <Image src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL+category?.icon[0]?.url} alt='category' width={30} height={30} className=''/>
                  <h2 className='text-lg'>{category?.name}</h2>
                 </DropdownMenuItem>
+                </Link>
               )
             }
           </DropdownMenuContent>
