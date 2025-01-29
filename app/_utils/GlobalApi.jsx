@@ -9,5 +9,6 @@ const getSliders=()=>axiosClient.get('/sliders?populate=*').then(resp=>resp.data
 const getCategoryList=()=>axiosClient.get('/categories?populate=*').then(resp=>resp.data.data)
 const getProductList=()=>axiosClient.get('/products?populate=*').then(resp=>resp.data.data)
 const getProductByCategory=(category)=>axiosClient.get(`/products?filters[categories][name][$in]=${category}&populate=*`).then(resp=>resp.data.data) || axiosClient.get(`/categories/${category}/products?populate=*`).then(resp=>resp.data.data)
+const registerUser=(username,email,password)=>axiosClient.post('/auth/local/register',{username,email,password})
 
-export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory}
+export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory,registerUser}
