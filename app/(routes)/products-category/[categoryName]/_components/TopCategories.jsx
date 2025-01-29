@@ -3,8 +3,6 @@ import Link from 'next/link'
 import React from 'react'
 
 const TopCategoryList = ({ categoryList,selectedCategory }) => {
-    console.log(selectedCategory)
-    console.log(categoryList)
     return (
         <div className='flex gap-5 mt-2 overflow-auto mx-7 md:mx-20 justify-center'>
             {categoryList?.map((category, index) =>

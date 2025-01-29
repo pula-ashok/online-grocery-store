@@ -1,11 +1,12 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { LayoutGridIcon, Search, ShoppingBag } from 'lucide-react'
+import { CircleUserRound, LayoutGridIcon, Search, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { getCategory } from '../_utils/GlobalApi'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
   const [categoryList, setCategoryList] = useState([])
@@ -14,6 +15,12 @@ const Header = () => {
   },[])
   const getCategoryList=()=>{
     getCategory().then(res=>setCategoryList(res?.data?.data))
+  }
+  const router=useRouter()
+  const isLoggedIn=sessionStorage.getItem('jwt')?true:false
+  const onSignOut=()=>{
+    sessionStorage.clear()
+    router.push('/sign-in')
   }
   return (
     <div className='flex justify-between p-5 shadow-md'>
@@ -50,7 +57,17 @@ const Header = () => {
         <h2 className='flex items-center gap-2'>
           <ShoppingBag/> 0
         </h2>
-        <Button>Login</Button>
+      {!isLoggedIn ?  <Link href={'/sign-in'}><Button>Login</Button></Link>:<DropdownMenu>
+        <DropdownMenuTrigger><CircleUserRound className='bg-green-100 text-primary p-2 h-12 w-12 rounded-full cursor-pointer'/></DropdownMenuTrigger>
+        <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>My Order</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>onSignOut()}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>}
+        
       </div>
     </div>
   )
