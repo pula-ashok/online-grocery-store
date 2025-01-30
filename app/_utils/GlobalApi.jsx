@@ -12,5 +12,6 @@ const getProductByCategory=(category)=>axiosClient.get(`/products?filters[catego
 const registerUser=(username,email,password)=>axiosClient.post('/auth/local/register',{username,email,password})
 const signInUser=(email,password)=>axiosClient.post('/auth/local',{identifier:email,password})
 const addToCart=(data,jwt)=>axiosClient.post('/user-carts',data,{headers:{Authorization:`Bearer ${jwt}`}})
+const getCartItems=(jwt,userid)=>axiosClient.get(`/user-carts?filters[userid][$eq]=${userid}&populate=*`,{headers:{Authorization:`Bearer ${jwt}`}}).then(resp=>resp.data.data)
 
-export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory,registerUser,signInUser,addToCart}
+export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory,registerUser,signInUser,addToCart,getCartItems}

@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button'
 import { LoaderCircle, ShoppingBasket } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { addToCart } from '../_utils/GlobalApi'
 import { toast } from 'sonner'
+import { UpdateCartContext } from '../_context/UpdateCartContext'
 
 const ProductItemDetails = ({product}) => {
   const [productToalPrice, setProductToalPrice] = useState(product?.sellingPrice?product?.sellingPrice:product?.mrp)
@@ -14,6 +15,7 @@ const ProductItemDetails = ({product}) => {
   const user=JSON.parse(sessionStorage.getItem('user'))
   const router=useRouter()
   const [loading, setLoading] = useState(false)
+  const {updateCart,setUpdateCart}=useContext(UpdateCartContext)
   const addingCart=()=>{
     setLoading(true)
       if(!jwt){
@@ -25,13 +27,15 @@ const ProductItemDetails = ({product}) => {
           quantity,
           amount:(quantity*productToalPrice).toFixed(2),
           // products:product.id,
-          // users_permissions_user:user.id
+          // users_permissions_users:user.id,
+          userid:user.id
         }
       }
     addToCart(data, JSON.parse(jwt))
       .then((res) => {
         toast.success("Product added to cart successfully");
-        router.push("/cart");
+        // router.push("/cart");
+        setUpdateCart(!updateCart)
         setLoading(false);
       })
       .catch((err) => {
