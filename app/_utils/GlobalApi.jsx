@@ -11,5 +11,6 @@ const getProductList=()=>axiosClient.get('/products?populate=*').then(resp=>resp
 const getProductByCategory=(category)=>axiosClient.get(`/products?filters[categories][name][$in]=${category}&populate=*`).then(resp=>resp.data.data) || axiosClient.get(`/categories/${category}/products?populate=*`).then(resp=>resp.data.data)
 const registerUser=(username,email,password)=>axiosClient.post('/auth/local/register',{username,email,password})
 const signInUser=(email,password)=>axiosClient.post('/auth/local',{identifier:email,password})
+const addToCart=(data,jwt)=>axiosClient.post('/user-carts',data,{headers:{Authorization:`Bearer ${jwt}`}})
 
-export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory,registerUser,signInUser}
+export {getCategory,getSliders,getCategoryList,getProductList,getProductByCategory,registerUser,signInUser,addToCart}

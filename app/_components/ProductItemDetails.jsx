@@ -1,12 +1,44 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { ShoppingBasket } from 'lucide-react'
+import { LoaderCircle, ShoppingBasket } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import { addToCart } from '../_utils/GlobalApi'
+import { toast } from 'sonner'
 
 const ProductItemDetails = ({product}) => {
   const [productToalPrice, setProductToalPrice] = useState(product?.sellingPrice?product?.sellingPrice:product?.mrp)
   const [quantity, setQuantity] = useState(1)
+  const jwt=sessionStorage.getItem('jwt')
+  const user=JSON.parse(sessionStorage.getItem('user'))
+  const router=useRouter()
+  const [loading, setLoading] = useState(false)
+  const addingCart=()=>{
+    setLoading(true)
+      if(!jwt){
+        setLoading(false)
+        router.push('/sign-in')
+      }
+      const data={
+        data:{
+          quantity,
+          amount:(quantity*productToalPrice).toFixed(2),
+          // products:product.id,
+          // users_permissions_user:user.id
+        }
+      }
+    addToCart(data, JSON.parse(jwt))
+      .then((res) => {
+        toast.success("Product added to cart successfully");
+        router.push("/cart");
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err?.response?.data?.error?.message);
+      });
+  }
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 p-7 bg-white text-black'>
         <Image src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL+product?.images[0]?.url} alt='product' width={300} height={300} className='bg-slate-200 p-5 h-[320px] w-[300px] object-contain rounded-lg'/>
@@ -27,7 +59,7 @@ const ProductItemDetails = ({product}) => {
                 </div>
                 <h2 className='text-2xl font-bold'>${(quantity * productToalPrice).toFixed(2)}</h2>
               </div>
-                <Button><ShoppingBasket/> Add To Cart</Button>
+                <Button onClick={()=>addingCart()} disabled={loading}><ShoppingBasket/>{loading?<LoaderCircle className='animate-spin'/>: 'Add To Cart'}</Button>
              </div>
              <h2><span className='font-bold'>Category: </span>{product?.categories[0]?.name}</h2>
         </div>
